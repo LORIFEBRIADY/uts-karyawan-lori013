@@ -1,0 +1,33 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Karyawan {
+  id        Int         @id @default(autoincrement())
+  nama      String
+  jabatan   String?
+  absensi   Absensi[]   // Relasi One-to-Many ke Absensi
+  penjualan Penjualan[] // Relasi One-to-Many ke Penjualan
+}
+
+model Absensi {
+  id              Int      @id @default(autoincrement())
+  karyawanId      Int
+  tanggal_absensi DateTime
+  status          Int
+  karyawan        Karyawan @relation(fields: [karyawanId], references: [id])
+}
+
+model Penjualan {
+  id         Int      @id @default(autoincrement())
+  karyawanId Int
+  total      Float
+  tanggal    DateTime @default(now())
+  karyawan   Karyawan @relation(fields: [karyawanId], references: [id])
+}
